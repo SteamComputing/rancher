@@ -1,4 +1,5 @@
 .*
 /log
+/ops/certs/*
 /sites/*
 /tmp
