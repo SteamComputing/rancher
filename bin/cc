@@ -1,0 +1,3 @@
+#!/bin/sh
+
+docker exec -it ${PWD##*/}_${1%/}_1 bash

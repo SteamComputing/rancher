@@ -1,0 +1,38 @@
+version: '3.7'
+
+volumes:
+  html:
+
+services:
+  proxy:
+    image: jwilder/nginx-proxy:alpine
+    labels:
+      - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
+    restart: unless-stopped
+    volumes:
+      - "./certs:/etc/nginx/certs:ro"
+      - "./vhost.d:/etc/nginx/vhost.d:ro"
+      - "html:/usr/share/nginx/html"
+      - "/var/run/docker.sock:/tmp/docker.sock"
+    env_file:
+      - common-variables.env
+    ports:
+      - "80:80"
+      - "443:443"
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    restart: on-failure
+    depends_on:
+      - proxy
+    volumes:
+      - "./certs:/etc/nginx/certs:rw"
+      - "./vhost.d:/etc/nginx/vhost.d:rw"
+      - "html:/usr/share/nginx/html"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    env_file:
+      - common-variables.env
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
