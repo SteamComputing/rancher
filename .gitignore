@@ -2,4 +2,5 @@
 /log
 /ops/certs/*
 /sites/*
+!/sites/template/*
 /tmp
